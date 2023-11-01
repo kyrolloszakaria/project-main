@@ -1,0 +1,11 @@
+var w := 5.2
+
+proc foo(x: int, y: float)
+    z = work(x + 5)
+
+    proc work(x: int): float
+        ret x * y
+    corp
+corp
+
+foo(1, w)

@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "./gen/src/antlr"
+    ],
+    "files.associations": {
+        "*.mb": "shellscript"
+    }
+}
