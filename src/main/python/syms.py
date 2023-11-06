@@ -1,11 +1,19 @@
 class Binding:
-    pass
+    def __init__(self, name, symbol_type):
+        self.name = name
+        self.symbol_type = symbol_type
+
 
 class IntBinding(Binding):
     pass
 
 class FloatBinding(Binding):
     pass
+
+class VarBinding(Binding):
+    def __init__(self, name, vtype):
+        super().__init__(name, "var")
+        self.var_type = vtype
 
 class ProcBinding(Binding):
     def __init__(self, name, params=None, return_type=None):
