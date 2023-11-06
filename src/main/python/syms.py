@@ -1,18 +1,7 @@
-# NOTE: This is the code from our in-class activity.
-# Feel free to modify it as you see fit.
-
-
 class Binding:
-    pass
-
-
-class IntBinding(Binding):
-    pass
-
-
-class FloatBinding(Binding):
-    pass
-
+    def __init__(self, name, type=None):
+        self.name = name
+        self.type = type  # Type of the binding
 
 class SymbolTable:
     def __init__(self, parent=None):
@@ -21,20 +10,21 @@ class SymbolTable:
 
     def bind(self, name, binding):
         if name in self.bindings:
-            raise Exception("no")
+            raise Exception(f"Symbol '{name}' is already declared in this scope.")
         self.bindings[name] = binding
 
     def lookup(self, name):
-        if name in self.bindings:
-            return self.binings[name]
-        if not self.parent:
-            raise Exception("no")
-        return self.parent.lookup(name)
+        binding = self.bindings.get(name)
+        if binding is not None:
+            return binding
+        if self.parent is not None:
+            return self.parent.lookup(name)
+        return None
 
     def enter(self):
-        return SymbolTable(parent=self)
+        new_scope = SymbolTable()
+        new_scope.parent = self  # Set the parent scope
+        return new_scope
 
     def exit(self):
-        if not self.parent:
-            raise Exception("no")
         return self.parent
