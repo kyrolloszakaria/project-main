@@ -1,7 +1,17 @@
 class Binding:
-    def __init__(self, name, type=None):
-        self.name = name
-        self.type = type  # Type of the binding
+    pass
+
+class IntBinding(Binding):
+    pass
+
+class FloatBinding(Binding):
+    pass
+
+class ProcBinding(Binding):
+    def __init__(self, name, params=None, return_type=None):
+        super().__init__(name, "proc")
+        self.params = params  # List of parameter types
+        self.return_type = return_type  # Return type of the procedure
 
 class SymbolTable:
     def __init__(self, parent=None):
