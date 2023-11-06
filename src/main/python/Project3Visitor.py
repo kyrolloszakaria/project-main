@@ -1,8 +1,10 @@
 from asts import AbstractVisitor
 from syms import SymbolTable, ProcBinding, VarBinding
+import logging
+logger = logging.getLogger(__name__)
 
 class Project3Visitor(AbstractVisitor):
-    def __init__(self, logger):
+    def __init__(self):
         self.logger = logger
         self.current_scope = SymbolTable()  # Create the root symbol table
         self.current_type = None  # Track the current type in context
