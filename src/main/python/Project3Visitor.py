@@ -38,7 +38,7 @@ class Project3Visitor(AbstractVisitor):
     def visitVariableDeclaration(self, node, arg: SymbolTable):
         var_type = arg.lookup(node.type)
         if not var_type:
-            self.error(f"Type '{node.type}' is not defined.")
+            self.error(f"Type '{node.type}' is not defined in variable declaration.")
         
         if node.rhs:
             expr_type = node.rhs.accept(self, arg)
