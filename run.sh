@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+git pull
+
 if [ -z "$2" ]; then
 	MAIN=project3
 else
