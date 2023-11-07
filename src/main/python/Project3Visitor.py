@@ -85,8 +85,11 @@ class Project3Visitor(AbstractVisitor):
         # Get the type of the expression (right-hand side)
         expr_type = node.rhs.accept(self, symbol_table)
 
+        print("expr_type: ", expr_type)
+
         # If ID2 is specified, make sure it matches the type of the expression
         if node.type:
+            print("ID2 is specified")
             declared_type = self.getname(node.type, symbol_table)
             if declared_type != expr_type:
                 return f"Error: Cannot assign an expression of type '{expr_type}' to a variable of type '{declared_type}'."
