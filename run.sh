@@ -3,7 +3,7 @@
 git pull
 
 if [ -z "$2" ]; then
-	MAIN=project2
+	MAIN=project3
 else
 	MAIN=$1
 	shift
