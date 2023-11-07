@@ -114,7 +114,7 @@ class Project3Visitor(AbstractVisitor):
         # Get the type of the parameters
         param_types = []
         if node.params:
-            param_types = [param.accept(self, proc_table) for param in node.params]
+            param_types = [param.accept(self, proc_table) for param in node.types]
 
         # Get the return type from ID2 or use 'void' if none is given
         return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
@@ -132,7 +132,7 @@ class Project3Visitor(AbstractVisitor):
         symbol_table.exit()
 
         # Return the function's type ('proc')
-        return 'proc'
+        return 'OK'
 
     def visitFormalParameters(self, node, symbol_table):
         print_function_name()
