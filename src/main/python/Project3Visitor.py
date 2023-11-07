@@ -108,9 +108,9 @@ class Project3Visitor(AbstractVisitor):
         proc_table = symbol_table.enter()
 
         # Ensure the name ID1 is not a type name
-        if self.getname(node.id, symbol_table) != 'error':
-            return f"Error: Cannot use reserved name '{node.id}' for a procedure."
-
+        if node.id in ["int", "float", "void", "string", "proc", "bool"]:
+            return f"cannot use reserved name {node.id} "
+        
         # Get the type of the parameters
         param_types = []
         if node.params:
