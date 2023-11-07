@@ -88,6 +88,7 @@ class Project3Visitor(AbstractVisitor):
         print("expr_type: ", expr_type)
 
         # If ID2 is specified, make sure it matches the type of the expression
+        print("ID2: (node.type): ", node.type)
         if node.type:
             print("ID2 is specified")
             declared_type = self.getname(node.type, symbol_table)
@@ -243,6 +244,7 @@ class Project3Visitor(AbstractVisitor):
     def visitTerm(self, node, symbol_table):
         print_function_name()
         # Check the left side of the term
+        print(dir(symbol_table))
         left_type = node.f.accept(self, symbol_table)
         print("left type: ", str(left_type))
         # Check the right side of the term (if it exists)
