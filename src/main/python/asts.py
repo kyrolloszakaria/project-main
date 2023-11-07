@@ -1,5 +1,6 @@
 class AbstractNode:
     def accept(self, v, arg=None):
+        print("Now we are visiting ", self.__class__.__name__ )
         func = getattr(v, 'visit' + self.__class__.__name__)
         return func(self, arg)
 
