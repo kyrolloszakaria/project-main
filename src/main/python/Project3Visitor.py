@@ -223,28 +223,29 @@ class Project3Visitor(AbstractVisitor):
         # Return the type 'bool' if the types match
         return 'bool'
 
-def visitExpression(self, node, symbol_table):
-    print_function_name()
-    # Check the left side of the expression
-    left_type = node.t.accept(self, symbol_table)
+    def visitExpression(self, node, symbol_table):
+        print_function_name()
+        # Check the left side of the expression
+        left_type = node.t.accept(self, symbol_table)
 
-    # Check the right side of the expression (if it exists)
-    if node.e:
-        right_type = node.e.accept(self, symbol_table)
+        # Check the right side of the expression (if it exists)
+        right_type = None
+        if node.e:
+            right_type = node.e.accept(self, symbol_table)
 
-        # Ensure both sides are of the same type
-        if left_type != right_type:
-            return f"Error: Operands in the expression are not of the same type: {left_type} and {right_type}."
+            # Ensure both sides are of the same type
+            if left_type != right_type:
+                return f"Error: Operands in the expression are not of the same type: {left_type} and {right_type}."
 
-        # Check the operator's compatibility with the operand types
-        if node.op in ('+', '-', '*', '/'):
-            if left_type not in ('int', 'float'):
-                return f"Error: Unsupported operand type for '{node.op}'."
-        else:
-            return f"Error: Unknown operator '{node.op}'."
+            # Check the operator's compatibility with the operand types
+            if node.op in ('+', '-', '*', '/'):
+                if left_type not in ('int', 'float'):
+                    return f"Error: Unsupported operand type for '{node.op}'."
+            else:
+                return f"Error: Unknown operator '{node.op}'."
 
-    # Return the resulting type of the expression
-    return left_type
+        # Return the resulting type of the expression
+        return left_type
 
 
     def visitTerm(self, node, symbol_table):
@@ -268,7 +269,31 @@ def visitExpression(self, node, symbol_table):
 
         # Return the type if the types match and are 'int' or 'float'
         return left_type
-
+    def visitFactor(self, node, symbol_table):
+        print_function_name()
+        if node.id:
+            # Handle a factor with an ID (variable)
+            var_type = self.getname(node.id, symbol_table)
+            if var_type == 'error':
+                return f"Error: Variable '{node.id}' undeclared."
+            return var_type
+        elif node.int:
+            # Handle a factor with an integer literal
+            return 'int'
+        elif node.float:
+            # Handle a factor with a floating-point literal
+            return 'float'
+        elif node.str:
+            # Handle a factor with a string literal
+            return 'string'
+        elif node.f:
+            # Handle a factor with an expression (parenthesized)
+            return node.f.accept(self, symbol_table)
+        elif node.call:
+            # Handle a factor with a function call
+            return node.call.accept(self, symbol_table)
+        else:
+            return 'error'  # Handle any other factor type
     # Visit method for ID
     def visitID(self, node, symbol_table):
         print_function_name()
