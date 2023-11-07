@@ -174,7 +174,7 @@ class ParenthesisFactor(AbstractNode):
 class ProcedureDeclaration(AbstractNode):
     def __init__(self):
         self.id = None
-        self.params = None
+        self.params = []
         self.ret = None
         self.b = None
 
