@@ -1,5 +1,5 @@
-from asts import AbstractVisitor
-from syms import SymbolTable, IntBinding, FloatBinding, StringBinding, BoolBinding, ProcBinding
+from asts import *
+from syms import *
 
 class Project3Visitor(AbstractVisitor):
     def getname(self, name, symbol_table):
