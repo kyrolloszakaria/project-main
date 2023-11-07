@@ -101,7 +101,7 @@ class Project3Visitor(AbstractVisitor):
         print("before symbol_table.bind()")
         symbol_table.bind(node.id, FloatBinding(value=0.0) if expr_type == 'float' else IntBinding(value=0))
         # Return the type of the variable
-        return expr_type
+        return "OK"
 
     def visitProcedureDeclaration(self, node, symbol_table):
         print_function_name()
