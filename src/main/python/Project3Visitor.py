@@ -54,7 +54,7 @@ class Project3Visitor(AbstractVisitor):
         # Visit variable declarations, procedure declarations, and statements
         if node.decls:
             for decl in node.decls:
-                result = decl.accept(self, block_table)
+                result = decl.accept(self, block_table) # variable declaration
                 if result != 'OK':
                     return result  # Propagate error messages
                 if isinstance(decl, ProcedureDeclaration):
@@ -79,6 +79,7 @@ class Project3Visitor(AbstractVisitor):
     def visitVariableDeclaration(self, node, symbol_table):
         print_function_name()
         # Look up ID1 in the current scope
+        print("node.id: ", node.id)
         if node.id in symbol_table.bindings:
             return f"Error: Variable '{node.id}' already exists in the current scope."
 
