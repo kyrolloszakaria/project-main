@@ -85,7 +85,7 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: Variable '{node.id}' already exists in the current scope."
 
         # Get the type of the expression (right-hand side)
-        print("rhs of expr: ", repr(node.rhs))
+        print("rhs of expr: ", str(node.rhs))
         expr_type = node.rhs.accept(self, symbol_table)
 
         print("expr_type: ", expr_type)
