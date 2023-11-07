@@ -242,7 +242,7 @@ class Project3Visitor(AbstractVisitor):
         print_function_name()
         # Check the left side of the term
         left_type = node.f.accept(self, symbol_table)
-
+        print("left type: ", str(left_type))
         # Check the right side of the term (if it exists)
         right_type = None
         if node.t:
