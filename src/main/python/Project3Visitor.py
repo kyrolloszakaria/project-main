@@ -80,10 +80,12 @@ class Project3Visitor(AbstractVisitor):
         print_function_name()
         # Look up ID1 in the current scope
         print("node.id: ", node.id)
+        print("symbol_table of the block bindings:", symbol_table.bindings)
         if node.id in symbol_table.bindings:
             return f"Error: Variable '{node.id}' already exists in the current scope."
 
         # Get the type of the expression (right-hand side)
+        print("rhs of expr: ", node.rhs)
         expr_type = node.rhs.accept(self, symbol_table)
 
         print("expr_type: ", expr_type)
