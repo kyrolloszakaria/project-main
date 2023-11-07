@@ -158,6 +158,12 @@ class FormalParameters(AbstractNode):
         self.params = []
         self.types = []
 
+class ProcedureDeclaration(AbstractNode):
+    def __init__(self):
+        self.id = None
+        self.params = None
+        self.ret = None
+        self.b = None
 
 class IfStatement(AbstractNode):
     def __init__(self):
@@ -171,12 +177,7 @@ class ParenthesisFactor(AbstractNode):
         self.e = None
 
 
-class ProcedureDeclaration(AbstractNode):
-    def __init__(self):
-        self.id = None
-        self.params = []
-        self.ret = None
-        self.b = None
+
 
 
 class Program(AbstractNode):
