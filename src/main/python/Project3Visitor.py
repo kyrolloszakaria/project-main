@@ -117,7 +117,7 @@ class Project3Visitor(AbstractVisitor):
             param_types = [param.accept(self, proc_table) for param in node.params]
 
         # Get the return type from ID2 or use 'void' if none is given
-        return_type = self.getname(node.type, symbol_table) if node.type else 'void'
+        return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
 
         # Create a 'proc' type and bind it
         proc_binding = ProcBinding(param_types, return_type)
