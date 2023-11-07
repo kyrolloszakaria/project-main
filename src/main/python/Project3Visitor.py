@@ -90,8 +90,8 @@ class Project3Visitor(AbstractVisitor):
             declared_type = self.getname(node.type, symbol_table)
             if declared_type != expr_type:
                 return f"Error: Cannot assign an expression of type '{expr_type}' to a variable of type '{declared_type}'."
-
         # Bind the variable to its type
+        print("before symbol_table.bind()")
         symbol_table.bind(node.id, FloatBinding(value=0.0) if expr_type == 'float' else IntBinding(value=0))
         # Return the type of the variable
         return expr_type
