@@ -34,12 +34,15 @@ class Project3Visitor(AbstractVisitor):
             return str(e)
         finally:
             self.current_scope = self.current_scope.exit()  # Exit back to the original scope
+        
 
     def visitVariableDeclaration(self, node, arg: SymbolTable):
         var_type = arg.lookup(node.type)
         if not var_type:
             self.error(f"Type '{node.type}' is not defined in variable declaration.")
-        
+        var_name = node.id
+        if var_name in self.symbol_tables[self.current_scope]:
+            raise TypeError(f'Variable "{var_name}" already exists in the current scope')
         if node.rhs:
             expr_type = node.rhs.accept(self, arg)
             if var_type != expr_type:
@@ -50,16 +53,13 @@ class Project3Visitor(AbstractVisitor):
     def visitProcedureDeclaration(self, node, arg: SymbolTable):
         proc_type = ProcBinding()
         self.current_scope.bind(node.id, proc_type)  # Bind the procedure
-
         try:
             self.current_scope = self.current_scope.enter()  # Enter a new scope
-
             # Visit formal parameters
             if node.params:
                 params = node.params.accept(self, arg)
                 for param_id, param_type in zip(params[::2], params[1::2]):
                     self.current_scope.bind(param_id, VarBinding(param_type))
-
             # Visit the block
             node.b.accept(self, arg)
         except Exception as e:
@@ -104,5 +104,15 @@ class Project3Visitor(AbstractVisitor):
 
     def visitReturnStatement(self, node, arg: SymbolTable):
         return node.e.accept(self, arg)
+    
+    def visitNUM_INT(self, node, arg=None):
+        return 'int'
+
+    def visitNUM_FLOAT(self, node, arg=None):
+        return 'float'
+
+    def visitSTR(self, node, arg=None):
+        return 'string'
+
 
     # Implement other visit methods for IfStatement, WhileStatement, Condition, Expression, Term, Factor, etc.
