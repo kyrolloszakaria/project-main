@@ -93,8 +93,6 @@ class Project3Visitor(AbstractVisitor):
 
         # Bind the variable to its type
         symbol_table.bind(node.id, FloatBinding(value=0.0) if expr_type == 'float' else IntBinding(value=0))
-        for sy in symbol_table:
-            print("symbol table", str(sy))
         # Return the type of the variable
         return expr_type
 
