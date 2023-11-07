@@ -244,7 +244,7 @@ class Project3Visitor(AbstractVisitor):
     def visitTerm(self, node, symbol_table):
         print_function_name()
         # Check the left side of the term
-        print(symbol_table.bindings())
+        print(symbol_table.bindings)
         left_type = node.f.accept(self, symbol_table)
         print("left type: ", str(left_type))
         # Check the right side of the term (if it exists)
