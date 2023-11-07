@@ -85,7 +85,7 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: Variable '{node.id}' already exists in the current scope."
 
         # Get the type of the expression (right-hand side)
-        print("rhs of expr: ", str(node.rhs))
+        print("rhs of expr: ", str(node.rhs))           #PROBLEM: what is the rhs value?
         expr_type = node.rhs.accept(self, symbol_table)
 
         print("expr_type: ", expr_type)
@@ -223,26 +223,29 @@ class Project3Visitor(AbstractVisitor):
         # Return the type 'bool' if the types match
         return 'bool'
 
-    def visitExpression(self, node, symbol_table):
-        print_function_name()
-        # Check the left side of the expression
-        left_type = node.t.accept(self, symbol_table)
+def visitExpression(self, node, symbol_table):
+    print_function_name()
+    # Check the left side of the expression
+    left_type = node.t.accept(self, symbol_table)
 
-        # Check the right side of the expression (if it exists)
-        right_type = None
-        if node.e:
-            right_type = node.e.accept(self, symbol_table)
+    # Check the right side of the expression (if it exists)
+    if node.e:
+        right_type = node.e.accept(self, symbol_table)
 
-            # Ensure both sides are of the same type
-            if left_type != right_type:
-                return "Error: Operands in the expression are not of the same type."
+        # Ensure both sides are of the same type
+        if left_type != right_type:
+            return f"Error: Operands in the expression are not of the same type: {left_type} and {right_type}."
 
-        # Ensure the type is either 'int' or 'float'
-        if left_type not in ('int', 'float'):
-            return f"Error: Unsupported operand type for '{node.op}'."
+        # Check the operator's compatibility with the operand types
+        if node.op in ('+', '-', '*', '/'):
+            if left_type not in ('int', 'float'):
+                return f"Error: Unsupported operand type for '{node.op}'."
+        else:
+            return f"Error: Unknown operator '{node.op}'."
 
-        # Return the type if the types match and are 'int' or 'float'
-        return left_type
+    # Return the resulting type of the expression
+    return left_type
+
 
     def visitTerm(self, node, symbol_table):
         print_function_name()
