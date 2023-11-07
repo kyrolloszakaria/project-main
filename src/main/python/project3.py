@@ -28,4 +28,4 @@ def main(logger, inputfile=None, inputstr=None):
         print(parser.err)
         sys.exit(-3)
 
-    p.accept(Project3Visitor(), SymbolTable())
+    print(p.accept(Project3Visitor(), SymbolTable()))
