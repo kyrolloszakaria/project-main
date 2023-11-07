@@ -1,8 +1,20 @@
 from asts import *
 from syms import *
 
+# debugging tool
+import inspect
+
+def print_function_name():
+    frame = inspect.currentframe()
+    try:
+        caller_name = inspect.getframeinfo(frame.f_back).function
+        print("This program reached:", caller_name)
+    finally:
+        del frame  # Make sure to clean up the frame
+
 class Project3Visitor(AbstractVisitor):
     def getname(self, name, symbol_table):
+        print_function_name()
         try:
             binding = symbol_table.lookup(name)
             if isinstance(binding, IntBinding):
@@ -21,6 +33,7 @@ class Project3Visitor(AbstractVisitor):
             return 'error'  # Handle undeclared or unknown types
 
     def visitProgram(self, node, symbol_table):
+        print_function_name()
         # Create a new symbol table for the program scope
         program_table = SymbolTable(parent=symbol_table)
 
@@ -31,6 +44,7 @@ class Project3Visitor(AbstractVisitor):
             return 'OK'  # Return 'OK' if there's no block
         
     def visitBlock(self, node, symbol_table):
+        print_function_name()
         # Create a new symbol table for the block scope
         block_table = symbol_table.enter()
 
@@ -63,6 +77,7 @@ class Project3Visitor(AbstractVisitor):
             return 'OK'  # Return 'OK' if no functions were found
 
     def visitVariableDeclaration(self, node, symbol_table):
+        print_function_name()
         # Look up ID1 in the current scope
         if node.id in symbol_table.bindings:
             return f"Error: Variable '{node.id}' already exists in the current scope."
@@ -83,6 +98,7 @@ class Project3Visitor(AbstractVisitor):
         return expr_type
 
     def visitProcedureDeclaration(self, node, symbol_table):
+        print_function_name()
         # Enter a new scope
         proc_table = symbol_table.enter()
 
@@ -114,6 +130,7 @@ class Project3Visitor(AbstractVisitor):
         return 'proc'
 
     def visitFormalParameters(self, node, symbol_table):
+        print_function_name()
         # Initialize a list to collect parameter types
         param_types = []
 
@@ -130,6 +147,7 @@ class Project3Visitor(AbstractVisitor):
         return tuple(param_types)  # You can use list() if you prefer a list
 
     def visitAssignmentStatement(self, node, symbol_table):
+        print_function_name()
         # Look up the ID in the symbol table
         id_type = self.getname(node.id, symbol_table)
         if id_type == 'error':
@@ -146,6 +164,7 @@ class Project3Visitor(AbstractVisitor):
         return id_type
 
     def visitReturnStatement(self, node, symbol_table):
+        print_function_name()
         # Visit the expression in the return statement
         return_type = node.e.accept(self, symbol_table)
 
@@ -153,6 +172,7 @@ class Project3Visitor(AbstractVisitor):
         return return_type
 
     def visitIfStatement(self, node, symbol_table):
+        print_function_name()
         # Check the condition
         condition_type = node.c.accept(self, symbol_table)
 
@@ -170,6 +190,7 @@ class Project3Visitor(AbstractVisitor):
         return else_result
 
     def visitWhileStatement(self, node, symbol_table):
+        print_function_name()
         # Check the condition in the while loop
         condition_type = node.c.accept(self, symbol_table)
 
@@ -184,6 +205,7 @@ class Project3Visitor(AbstractVisitor):
         return statement_result
 
     def visitCondition(self, node, symbol_table):
+        print_function_name()
         # Check both sides of the condition
         type1 = node.lhs.accept(self, symbol_table)
         type2 = node.rhs.accept(self, symbol_table)
@@ -196,6 +218,7 @@ class Project3Visitor(AbstractVisitor):
         return 'bool'
 
     def visitExpression(self, node, symbol_table):
+        print_function_name()
         # Check the left side of the expression
         left_type = node.t.accept(self, symbol_table)
 
@@ -216,6 +239,7 @@ class Project3Visitor(AbstractVisitor):
         return left_type
 
     def visitTerm(self, node, symbol_table):
+        print_function_name()
         # Check the left side of the term
         left_type = node.f.accept(self, symbol_table)
 
@@ -237,6 +261,7 @@ class Project3Visitor(AbstractVisitor):
 
     # Visit method for ID
     def visitID(self, node, symbol_table):
+        print_function_name()
         # Look up the variable name in the symbol table
         var_type = self.getname(node.id, symbol_table)
         if var_type == 'error':
@@ -247,20 +272,24 @@ class Project3Visitor(AbstractVisitor):
 
     # Visit method for NUM_INT
     def visitNUM_INT(self, node, symbol_table):
+        print_function_name()
         # Return the type 'int' for integer literals
         return 'int'
 
     # Visit method for NUM_FLOAT
     def visitNUM_FLOAT(self, node, symbol_table):
+        print_function_name()
         # Return the type 'float' for floating-point literals
         return 'float'
 
     # Visit method for STR
     def visitSTR(self, node, symbol_table):
+        print_function_name()
         # Return the type 'string' for string literals
         return 'string'
 
     def visitParenthesisFactor(self, node, symbol_table):
+        print_function_name()
         # Visit the enclosed expression within the parentheses
         enclosed_expression_type = node.e.accept(self, symbol_table)
 
@@ -268,6 +297,7 @@ class Project3Visitor(AbstractVisitor):
         return enclosed_expression_type
     
     def visitCallExpression(self, node, symbol_table):
+        print_function_name()
         # Lookup the function or procedure in the symbol table
         proc_type = self.getname(node.id, symbol_table)
 
@@ -293,6 +323,7 @@ class Project3Visitor(AbstractVisitor):
         return proc_type.ret
 
     def visitActualParameters(self, node, symbol_table):
+        print_function_name()
         # Initialize an empty list to store parameter types
         parameter_types = []
 
