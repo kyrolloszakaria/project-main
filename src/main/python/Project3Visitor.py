@@ -166,7 +166,20 @@ class Project3Visitor(AbstractVisitor):
         # Return the list of parameter names
         return param_names
 
-
+    def visitStatement(self, node, arg=None):
+        result = ""
+        if node.assign:
+            result = node.assign.accept(self, arg)
+        if node.call:
+            result = node.call.accept(self, arg)
+        if node.ret:
+            result = node.ret.accept(self, arg)
+        if node.ifs:
+            result = node.ifs.accept(self, arg)
+        if node.whiles:
+            result = node.whiles.accept(self, arg)
+        return result
+    
     def visitAssignmentStatement(self, node, symbol_table):
         print_function_name()
         # Look up the ID in the symbol table
@@ -174,7 +187,6 @@ class Project3Visitor(AbstractVisitor):
         id_type = self.getname(node.id, symbol_table)
         print("lhs type: ", id_type)
         if id_type == 'error':
-            print("here")
             return f"{node.id} undeclared."
 
         # Get the type of the expression
@@ -185,7 +197,7 @@ class Project3Visitor(AbstractVisitor):
             return f"{node.id}' has type {id_type} but trying to assign type {expr_type}"
 
         # Return the type
-        return id_type
+        return "OK"
 
     def visitReturnStatement(self, node, symbol_table):
         print_function_name()
