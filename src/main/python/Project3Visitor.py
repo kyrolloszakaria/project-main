@@ -378,7 +378,10 @@ class Project3Visitor(AbstractVisitor):
         print(f" node.params: {str(node.params)}")
         print(f" node.params.params:{str(node.params.params)}")
         for exp in node.params.params:
-            print(f"Expression t: {exp.t} ")        
+            print(f"Expression t: {exp.t} ")  # term
+            print(f"term.f : {exp.t.f}")
+            print(f"term.op : {exp.t.op}")
+            print(f"term.t : {exp.t.t}")       
             print(f"Expression op: {exp.op} ")
             print(f"Expression e: {exp.e} ")        
         # Get the list of parameters and their types
