@@ -128,11 +128,12 @@ class Project3Visitor(AbstractVisitor):
         # Check the block
         # b is the proc block (function body)
         block_result = node.b.accept(self, proc_table)
+        print("Now --------------------------------> checking the body of the function")
         if block_result != 'OK':
             return block_result  # Propagate block-level errors
 
         # Exit back to the original scope
-        print("Symbol table in procedure declaration: ",symbol_table.bindings)
+        print("Symbol table in procedure declaration ------------------------> ",symbol_table.bindings)
         symbol_table.exit()
         # Return the function's type ('proc')
         return 'OK'
@@ -291,11 +292,11 @@ class Project3Visitor(AbstractVisitor):
 
             # Ensure both sides are of the same type
             if left_type != right_type:
-                return "Error: Operands in the term are not of the same type."
+                return "Operands not same type"
 
         # Ensure the type is either 'int' or 'float'
         if left_type not in ('int', 'float'):
-            return f"Error: Unsupported operand type for '{node.op}'."
+            return f"Unsupported operand type for {node.op}"
 
         # Return the type if the types match and are 'int' or 'float'
         return left_type
