@@ -87,9 +87,6 @@ class Project3Visitor(AbstractVisitor):
         if node.id in ["int", "float", "void", "string", "bool"]:
             raise Exception(f"Cannot use reserved name '{node.id}' for a procedure.")
 
-        # Get the list of parameter types (names)
-        param_names = [param.id for param in node.params.params]
-
         # Get the list of parameter types: hello
         param_types = node.params.accept(self, proc_table)
 
