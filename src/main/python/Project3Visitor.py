@@ -376,7 +376,7 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: '{node.id}' is not a procedure."
 
         # Get the list of parameters and their types
-        param_names = node.params.params
+        param_names = node.params.params.params
         param_types = []
         print("param names: ", param_names)
         for param in param_names:
