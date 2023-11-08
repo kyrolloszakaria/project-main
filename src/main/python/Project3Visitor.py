@@ -102,6 +102,7 @@ class Project3Visitor(AbstractVisitor):
         # Return the type of the variable
         return "OK"
 
+
     def visitProcedureDeclaration(self, node, symbol_table):
         print_function_name()
         # Enter a new scope
@@ -110,11 +111,9 @@ class Project3Visitor(AbstractVisitor):
         # Ensure the name ID1 is not a type name
         if node.id in ["int", "float", "void", "string", "proc", "bool"]:
             return f"cannot use reserved name {node.id} "
-        
-        # Get the type of the parameters
-        param_types = []
-        if node.params:
-            param_types = [param.accept(self, proc_table) for param in node.params]
+
+        # Get the list of parameter types
+        param_types = node.params.accept(self, proc_table)
 
         # Get the return type from ID2 or use 'void' if none is given
         return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
@@ -134,6 +133,7 @@ class Project3Visitor(AbstractVisitor):
         # Return the function's type ('proc')
         return 'OK'
 
+
     def visitFormalParameters(self, node, symbol_table):
         print_function_name()
         # Initialize a list to collect parameter types
@@ -141,15 +141,15 @@ class Project3Visitor(AbstractVisitor):
 
         for param in node.params:
             # Ensure none of the names `ID1` are type names
-            if self.getname(param.id, symbol_table) != 'error':
-                return f"Error: Cannot use reserved name '{param.id}' for a parameter."
+            if param in ["int", "float", "void", "string", "proc", "bool"]:
+                return f"Error: Cannot use reserved name '{param}' for a parameter."
 
-            # Collect the parameter's type
-            param_type = self.getname(param.type, symbol_table)
-            param_types.append(param_type)
+            # Collect the parameter (which is already a type)
+            param_types.append(param)
 
         # Return the list or tuple of parameter types
         return tuple(param_types)  # You can use list() if you prefer a list
+
 
     def visitAssignmentStatement(self, node, symbol_table):
         print_function_name()
