@@ -105,6 +105,7 @@ class Project3Visitor(AbstractVisitor):
         return "OK"
     
     def visitProcedureDeclaration(self, node, symbol_table):
+        #node is ProcedureDeclaration
         print_function_name()
         # Enter a new scope
         proc_table = symbol_table.enter()
@@ -114,42 +115,54 @@ class Project3Visitor(AbstractVisitor):
             raise Exception(f"Cannot use reserved name '{node.id}' for a procedure.")
 
         # Get the list of parameter types:
-        param_types = node.params.accept(self, proc_table)
-
+        # bind all parameter names to their types
+        param_names = node.params.accept(self, proc_table)
+        print("proc_table bindings: ", proc_table.bindings)
         # Get the return type from ID2 or use 'void' if none is given
         return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
 
         # Create a 'proc' type and bind it 
-        proc_binding = ProcBinding(param_types, return_type)
+        proc_binding = ProcBinding(node.id, return_type)
         symbol_table.bind(node.id, proc_binding)
 
         # Check the block
+        # b is the proc block (function body)
         block_result = node.b.accept(self, proc_table)
         if block_result != 'OK':
             return block_result  # Propagate block-level errors
 
         # Exit back to the original scope
-        print("Symbol table in variable declaration: ",symbol_table.bindings)
+        print("Symbol table in procedure declaration: ",symbol_table.bindings)
         symbol_table.exit()
-
         # Return the function's type ('proc')
         return 'OK'
 
 
     def visitFormalParameters(self, node, symbol_table):
-    # node is , symbol_table is the proc_table 
+    # node is FormalParameters, symbol_table is the proc_table 
     # return a list of parameters and add the binding to the symbol table given
         print_function_name()
-        print(dir(node), str(node))
-        print(node.id)
         # Initialize a list to collect parameter (names)
-        param_names = [param.id for param in node.params.params]
+        param_names = [param for param in node.params]
+        param_types = [type for type in node.types]
 
         # Check for reserved parameter names
         for param in param_names:
             if param in ["int", "float", "void", "string", "bool"]:
-                raise Exception(f"Cannot use reserved name '{param}' for a parameter.")
+                raise Exception(f"Cannot use reserved name '{param}'")
 
+        # bind the the parameter names to types.
+        for i in range(len(param_names)):
+            if param_types[i] == 'float':
+                symbol_table.bind(param_names[i], FloatBinding(value=0.0))
+            elif param_types[i] == 'int':
+                symbol_table.bind(param_names[i], IntBinding(value=0))
+            elif param_types[i] == 'string':
+                symbol_table.bind(param_names[i], StringBinding(value="hello"))
+            elif param_types[i] == 'bool':
+                symbol_table.bind(param_names[i], BoolBinding(value=True))
+            else:
+                return f"Undefined type for parameter '{param_names[i]}'"
         # Return the list of parameter names
         return param_names
 
