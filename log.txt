@@ -1,0 +1,135 @@
+Updating 4e9da33..2e4ee50
+Fast-forward
+ src/main/python/Project3Visitor.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+PyBuilder version 0.13.10
+Build started at 2023-11-08 08:21:19
+------------------------------------------------------------
+[INFO]  Building 425project version 3
+[INFO]  Executing build in /home/kzakaria2/Desktop/compiler/project3/project-main
+[INFO]  Going to execute task project3
+[INFO]  Processing plugin packages 'flake8>=4.0' to be installed with {'upgrade': True}
+[INFO]  Creating target 'build' VEnv in '/home/kzakaria2/Desktop/compiler/project3/project-main/target/venv/build/cpython-3.10.7.final.0'
+[INFO]  Creating target 'test' VEnv in '/home/kzakaria2/Desktop/compiler/project3/project-main/target/venv/test/cpython-3.10.7.final.0'
+------------------------------------------------------------
+COMPILER OUTPUT START
+------------------------------------------------------------
+This program reached: __init__  to create a new symbol table
+Now we are visiting  Program
+This program reached: visitProgram
+This program reached: __init__  to create a new symbol table
+Now we are visiting  Block
+This program reached: visitBlock
+This program reached: enter  to create a new scope
+This program reached: __init__  to create a new symbol table
+Now we are visiting  ProcedureDeclaration
+This program reached: visitProcedureDeclaration
+This program reached: enter  to create a new scope
+This program reached: __init__  to create a new symbol table
+Now we are visiting  FormalParameters
+This program reached: visitFormalParameters
+In creating formal parameters ------------------->
+names: ['x']
+Types:['int']
+This program reached: bind  
+proc_table bindings:  {'int': <syms.IntBinding object at 0x7fd0b23353c0>}
+This program reached: bind  
+Now we are visiting  Block
+This program reached: visitBlock
+This program reached: enter  to create a new scope
+This program reached: __init__  to create a new symbol table
+Now we are visiting  VariableDeclaration
+This program reached: visitVariableDeclaration
+node.id:  z
+symbol_table of the block bindings: {}
+rhs of expr:  <asts.Expression object at 0x7fd0b2334b50>
+Now we are visiting  Expression
+This program reached: visitExpression
+Now we are visiting  Term
+This program reached: visitTerm
+Symbol table binding:  {}
+Now we are visiting  Factor
+This program reached: visitFactor
+This program reached: getname
+This program reached: lookup  
+This program reached: lookup  
+This program reached: lookup  
+This program reached: lookup  
+This program reached: lookup  
+left type:  Error: Variable 'x' undeclared.
+Now we are visiting  Expression
+This program reached: visitExpression
+Now we are visiting  Term
+This program reached: visitTerm
+Symbol table binding:  {}
+Now we are visiting  Factor
+This program reached: visitFactor
+left type:  int
+expr_type:  Error: Operands in the expression are not of the same type: Unsupported operand type for None and int.
+ID2: (node.type):  None
+before symbol_table.bind()
+This program reached: bind  
+Symbol table in variable declaration:  {'z': <syms.IntBinding object at 0x7fd0b2335480>}
+result: OK
+This program reached: exit  
+Now --------------------------------> checking the body of the function
+Symbol table in procedure declaration ------------------------>  {'work': <syms.ProcBinding object at 0x7fd0b2335870>}
+This program reached: exit  
+result: OK
+Now we are visiting  VariableDeclaration
+This program reached: visitVariableDeclaration
+node.id:  z
+symbol_table of the block bindings: {'work': <syms.ProcBinding object at 0x7fd0b2335870>}
+rhs of expr:  <asts.Expression object at 0x7fd0b2335060>
+Now we are visiting  Expression
+This program reached: visitExpression
+Now we are visiting  Term
+This program reached: visitTerm
+Symbol table binding:  {'work': <syms.ProcBinding object at 0x7fd0b2335870>}
+Now we are visiting  Factor
+This program reached: visitFactor
+Now we are visiting  CallExpression
+This program reached: visitCallExpression
+node.id:  work
+This program reached: getname
+This program reached: lookup  
+ node: <asts.CallExpression object at 0x7fd0b2334fa0>
+ node.params: <asts.ActualParameters object at 0x7fd0b23351e0>
+ node.params.params:[<asts.Expression object at 0x7fd0b2335150>]
+Expression t: <asts.Term object at 0x7fd0b2335030> 
+term.f : <asts.Factor object at 0x7fd0b2335000>
+factor.id: None
+factor.int: 2
+factor.float: None
+term.op : None
+term.t : None
+Expression op: None 
+Expression e: None 
+param types:  ['int']
+This program reached: lookup  
+Function inside symbol table:  <syms.ProcBinding object at 0x7fd0b2335870>
+This program reached: lookup  
+This program reached: lookup  
+left type:  Procedure work requires 4 parameters but given 1.
+expr_type:  Unsupported operand type for None
+ID2: (node.type):  None
+before symbol_table.bind()
+This program reached: bind  
+Symbol table in variable declaration:  {'work': <syms.ProcBinding object at 0x7fd0b2335870>, 'z': <syms.IntBinding object at 0x7fd0b2335180>}
+result: OK
+This program reached: exit  
+proc
+------------------------------------------------------------
+COMPILER OUTPUT END
+------------------------------------------------------------
+------------------------------------------------------------
+BUILD SUCCESSFUL
+------------------------------------------------------------
+Build Summary
+             Project: 425project
+             Version: 3
+      Base directory: /home/kzakaria2/Desktop/compiler/project3/project-main
+        Environments: 
+               Tasks: prepare [2398 ms] compile_sources [0 ms] antlr [539 ms] project3 [108 ms]
+Build finished at 2023-11-08 08:21:22
+Build took 3 seconds (3616 ms)
