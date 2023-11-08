@@ -400,8 +400,8 @@ class Project3Visitor(AbstractVisitor):
         formal_return_type = symbol_table.lookup(node.id).return_type
 
         # Check if the number of arguments matches the number of parameters
-        if len(num_formal_params) != len(args_types):
-            return f"Procedure {node.id} requires {len(num_formal_params)} parameters but given {len(args_types)}."
+        if num_formal_params != len(args_types):
+            return f"Procedure {node.id} requires {num_formal_params} parameters but given {len(args_types)}."
 
         # Check each argument type against its corresponding parameter type
         for arg, param_type in zip(args_types, types_formal_params):
