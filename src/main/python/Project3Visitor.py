@@ -395,10 +395,10 @@ class Project3Visitor(AbstractVisitor):
         
         print("param types: ", args_types)
         print("Function inside symbol table: ", symbol_table.lookup(node.id)) #procBinding
-        types_formal_params = symbol_table.lookup(node.id).params.params
+        types_formal_params = symbol_table.lookup(node.id).params # return the function name
         num_formal_params = len(types_formal_params)
         formal_return_type = symbol_table.lookup(node.id).return_type
-        print(f"types_formal_params: {types_formal_params}")
+        print(f"types_formal_params ----------------------------> {types_formal_params}")
         # Check if the number of arguments matches the number of parameters
         if num_formal_params != len(args_types):
             return f"Procedure {node.id} requires {num_formal_params} parameters but given {len(args_types)}."

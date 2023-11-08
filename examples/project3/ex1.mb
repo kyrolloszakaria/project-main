@@ -1,9 +1,9 @@
 var w := 5.2
 
 proc foo(x: int, y: float)
-    w = work(x + 5)
+    w = work(y + 5.0)
 
-    proc work(x: int): float
+    proc work(x: float): float
         ret x * y
     corp
 corp
