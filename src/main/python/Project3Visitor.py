@@ -28,7 +28,7 @@ class Project3Visitor(AbstractVisitor):
             elif isinstance(binding, ProcBinding):
                 return 'proc'
             else:
-                return 'error'  # Handle undeclared or unknown types
+                return f'{name} undeclared'  # Handle undeclared or unknown types
         except Exception as e:
             return 'error'  # Handle undeclared or unknown types
 
@@ -148,6 +148,7 @@ class Project3Visitor(AbstractVisitor):
             param_types.append(param)
 
         # Return the list or tuple of parameter types
+        print("parameter types: ",param_types)
         return tuple(param_types)  # You can use list() if you prefer a list
 
 
