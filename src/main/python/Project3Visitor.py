@@ -55,6 +55,7 @@ class Project3Visitor(AbstractVisitor):
         if node.decls:
             for decl in node.decls:
                 result = decl.accept(self, block_table) # variable declaration
+                print(f"result: {result}")
                 if result != 'OK':
                     return result  # Propagate error messages
                 if isinstance(decl, ProcedureDeclaration):
