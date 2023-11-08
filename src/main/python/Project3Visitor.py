@@ -55,7 +55,7 @@ class Project3Visitor(AbstractVisitor):
         if node.decls:
             for decl in node.decls:
                 result = decl.accept(self, block_table) # variable declaration
-                print(f"result: {result}")
+                print(f"reulst: {result}")
                 if result != 'OK':
                     return result  # Propagate error messages
                 if isinstance(decl, ProcedureDeclaration):
@@ -76,18 +76,18 @@ class Project3Visitor(AbstractVisitor):
             return function_types[-1]
         else:
             return 'OK'  # Return 'OK' if no functions were found
-        
+
     def visitVariableDeclaration(self, node, symbol_table):
         print_function_name()
         # Look up ID1 in the current scope
         print("node.id: ", node.id)
         print("symbol_table of the block bindings:", symbol_table.bindings)
         if node.id in symbol_table.bindings:
-            return f"{node.id} already exists"
+            return f"Error: {node.id} already exists in this scope."
+
         # Get the type of the expression (right-hand side)
         print("rhs of expr: ", str(node.rhs))           #PROBLEM: what is the rhs value?
         expr_type = node.rhs.accept(self, symbol_table)
-
         print("expr_type: ", expr_type)
 
         # If ID2 is specified, make sure it matches the type of the expression
@@ -97,36 +97,39 @@ class Project3Visitor(AbstractVisitor):
             declared_type = self.getname(node.type, symbol_table)
             if declared_type != expr_type:
                 return f"Error: Cannot assign an expression of type '{expr_type}' to a variable of type '{declared_type}'."
+
         # Bind the variable to its type
+        # Create an IntBinding or FloatBinding as appropriate
         print("before symbol_table.bind()")
-        symbol_table.bind(node.id, FloatBinding(value=0.0) if expr_type == 'float' else IntBinding(value=0))
+        if expr_type == 'float':
+            symbol_table.bind(node.id, FloatBinding(value=0.0))
+        else:
+            symbol_table.bind(node.id, IntBinding(value=0))
         print("Symbol table in variable declaration: ",symbol_table.bindings)
-        # Return the type of the variable
+
+        # Return "OK" to indicate a valid variable declaration
         return "OK"
-    
+
     def visitProcedureDeclaration(self, node, symbol_table):
-        #node is ProcedureDeclaration
+        # Enter a new scope for the procedure
         print_function_name()
-        # Enter a new scope
         proc_table = symbol_table.enter()
 
         # Ensure the name ID1 is not a type name
         if node.id in ["int", "float", "void", "string", "bool"]:
             raise Exception(f"Cannot use reserved name '{node.id}' for a procedure.")
 
-        # Get the list of parameter types:
-        # bind all parameter names to their types
+        # Get the list of parameter types and bind parameter names to their types
         param_names = node.params.accept(self, proc_table)
         print("proc_table bindings: ", proc_table.bindings)
         # Get the return type from ID2 or use 'void' if none is given
         return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
 
-        # Create a 'proc' type and bind it 
-        proc_binding = ProcBinding(node.id, return_type)
+        # Create a 'proc' type and bind it
+        proc_binding = ProcBinding(param_names, return_type)
         symbol_table.bind(node.id, proc_binding)
 
-        # Check the block
-        # b is the proc block (function body)
+        # Check the procedure block (function body)
         block_result = node.b.accept(self, proc_table)
         print("Now --------------------------------> checking the body of the function")
         if block_result != 'OK':
@@ -135,15 +138,13 @@ class Project3Visitor(AbstractVisitor):
         # Exit back to the original scope
         print("Symbol table in procedure declaration ------------------------> ",symbol_table.bindings)
         symbol_table.exit()
-        # Return the function's type ('proc')
+
+        # Return 'OK' to indicate a valid procedure declaration
         return 'OK'
 
-
     def visitFormalParameters(self, node, symbol_table):
-    # node is FormalParameters, symbol_table is the proc_table 
-    # return a list of parameters and add the binding to the symbol table given
         print_function_name()
-        # Initialize a list to collect parameter (names)
+        # Initialize lists to collect parameter names and types
         param_names = [param for param in node.params]
         param_types = [type for type in node.types]
 
@@ -151,20 +152,23 @@ class Project3Visitor(AbstractVisitor):
         # Check for reserved parameter names
         for param in param_names:
             if param in ["int", "float", "void", "string", "bool"]:
-                raise Exception(f"Cannot use reserved name '{param}'")
+                raise Exception(f"Cannot use reserved name '{param}' for a parameter.")
 
-        # bind the the parameter names to types.
-        for i in range(len(param_names)):                 
-            if param_types[i] == 'float':
-                symbol_table.bind(param_types[i], FloatBinding(value=0.0))
-            elif param_types[i] == 'int':
-                symbol_table.bind(param_types[i], IntBinding(value=0))
-            elif param_types[i] == 'string':
-                symbol_table.bind(param_types[i], StringBinding(value="hello"))
-            elif param_types[i] == 'bool':
-                symbol_table.bind(param_types[i], BoolBinding(value=True))
+        # Bind the parameter names to their corresponding types
+        for i in range(len(param_names)):
+            param_name = param_names[i]
+            param_type = param_types[i]
+            if param_type == 'float':
+                symbol_table.bind(param_name, FloatBinding(value=0.0))
+            elif param_type == 'int':
+                symbol_table.bind(param_name, IntBinding(value=0))
+            elif param_type == 'string':
+                symbol_table.bind(param_name, StringBinding())
+            elif param_type == 'bool':
+                symbol_table.bind(param_name, BoolBinding())
             else:
-                return f"Undefined type for parameter '{param_names[i]}'"
+                raise Exception(f"Undefined type '{param_type}' for parameter '{param_name}'")
+
         # Return the list of parameter names
         return param_names
 
@@ -188,17 +192,18 @@ class Project3Visitor(AbstractVisitor):
         print("lhs: ", node.id)
         id_type = self.getname(node.id, symbol_table)
         print("lhs type: ", id_type)
+        # Check if the ID is declared
         if id_type == 'error':
-            return f"{node.id} undeclared."
+            return f"Error: '{node.id}' undeclared."
 
-        # Get the type of the expression
+        # Get the type of the expression (right-hand side)
         expr_type = node.e.accept(self, symbol_table)
 
         # Check if the types match
         if id_type != expr_type:
-            return f"{node.id}' has type {id_type} but trying to assign type {expr_type}"
+            return f"Error: '{node.id}' has type '{id_type}' but trying to assign type '{expr_type}'."
 
-        # Return the type
+        # Return "OK" to indicate a valid assignment
         return "OK"
 
     def visitReturnStatement(self, node, symbol_table):
@@ -221,11 +226,14 @@ class Project3Visitor(AbstractVisitor):
         # Check everything in the 'then' branch
         then_result = node.t.accept(self, symbol_table)
 
-        # Check everything in the 'else' branch
-        else_result = node.f.accept(self, symbol_table)
+        # Check everything in the 'else' branch, if it exists
+        if node.f:
+            else_result = node.f.accept(self, symbol_table)
+            # Return the type of 'Statement2' (the 'else' branch)
+            return else_result
 
-        # Return the type of 'Statement2' (the 'else' branch)
-        return else_result
+        # Return the type of 'Statement1' (the 'then' branch) if there is no 'else' branch
+        return then_result
 
     def visitWhileStatement(self, node, symbol_table):
         print_function_name()
@@ -265,20 +273,23 @@ class Project3Visitor(AbstractVisitor):
         if node.e:
             right_type = node.e.accept(self, symbol_table)
 
-            # Ensure both sides are of the same type
-            if left_type != right_type:
-                return f"Error: Operands in the expression are not of the same type: {left_type} and {right_type}."
-
-            # Check the operator's compatibility with the operand types
+            # Ensure the types are compatible
             if node.op in ('+', '-', '*', '/'):
-                if left_type not in ('int', 'float'):
-                    return f"Error: Unsupported operand type for '{node.op}'."
+                if left_type not in ('int', 'float') or right_type not in ('int', 'float'):
+                    return f"Error: Unsupported operand types for '{node.op}' (left: {left_type}, right: {right_type})."
+            elif node.op in ('==', '!=', '<', '<=', '>', '>='):
+                if left_type != right_type:
+                    return f"Error: Operands in comparison have different types (left: {left_type}, right: {right_type})."
             else:
                 return f"Error: Unknown operator '{node.op}'."
 
-        # Return the resulting type of the expression
-        return left_type
-
+        # Determine the resulting type of the expression
+        if node.op in ('+', '-', '*', '/'):
+            # Arithmetic operations yield either 'int' or 'float'
+            return 'int' if left_type == 'int' and right_type == 'int' else 'float'
+        elif node.op in ('==', '!=', '<', '<=', '>', '>='):
+            # Comparison operations yield 'bool'
+            return 'bool'
 
     def visitTerm(self, node, symbol_table):
         print_function_name()
@@ -293,19 +304,20 @@ class Project3Visitor(AbstractVisitor):
 
             # Ensure both sides are of the same type
             if left_type != right_type:
-                return "Operands not same type"
+                return "Error: Operands in the term are not of the same type."
 
         # Ensure the type is either 'int' or 'float'
         if left_type not in ('int', 'float'):
-            return f"Unsupported operand type for {node.op}"
+            return f"Error: Unsupported operand type for '{node.op}'."
 
         # Return the type if the types match and are 'int' or 'float'
         return left_type
+
     def visitFactor(self, node, symbol_table):
         print_function_name()
         if node.id:
             # Handle a factor with an ID (variable)
-            var_type = self.getname(node.id, symbol_table)
+            var_type = self.visitID(node.id, symbol_table)
             if var_type == 'error':
                 return f"Error: Variable '{node.id}' undeclared."
             return var_type
@@ -326,30 +338,27 @@ class Project3Visitor(AbstractVisitor):
             return node.call.accept(self, symbol_table)
         else:
             return 'error'  # Handle any other factor type
-    # Visit method for ID
+
     def visitID(self, node, symbol_table):
         print_function_name()
         # Look up the variable name in the symbol table
-        var_type = self.getname(node.id, symbol_table)
+        var_type = self.getname(node, symbol_table)
         if var_type == 'error':
-            return f"Error: Variable '{node.id}' undeclared."
-        
+            return f"Error: Variable '{node}' undeclared."
+
         # Return the variable's type
         return var_type
 
-    # Visit method for NUM_INT
     def visitNUM_INT(self, node, symbol_table):
         print_function_name()
         # Return the type 'int' for integer literals
         return 'int'
 
-    # Visit method for NUM_FLOAT
     def visitNUM_FLOAT(self, node, symbol_table):
         print_function_name()
         # Return the type 'float' for floating-point literals
         return 'float'
 
-    # Visit method for STR
     def visitSTR(self, node, symbol_table):
         print_function_name()
         # Return the type 'string' for string literals
@@ -362,14 +371,11 @@ class Project3Visitor(AbstractVisitor):
 
         # Return the type of the enclosed expression
         return enclosed_expression_type
-    
+
     def visitCallExpression(self, node, symbol_table):
-        #node is CallExpression
-        #node.params is actual parameters node
         print_function_name()
         # Lookup the function or procedure in the symbol table
         print("node.id: ", node.id)
-
         proc_type = self.getname(node.id, symbol_table)
 
         # Check if the function or procedure exists
@@ -378,7 +384,8 @@ class Project3Visitor(AbstractVisitor):
         print(f" node: {str(node)}")
         print(f" node.params: {str(node.params)}")
         print(f" node.params.params:{str(node.params.params)}") # list of expressions
-        args_types = []
+
+        # Collect argument types
         for exp in node.params.params:
             print(f"Expression t: {exp.t} ")  # term
             print(f"term.f : {exp.t.f}")
@@ -389,28 +396,19 @@ class Project3Visitor(AbstractVisitor):
             print(f"term.t : {exp.t.t}")       
             print(f"Expression op: {exp.op} ")
             print(f"Expression e: {exp.e} ")
-            args_types.append(get_type_from_expression(exp))
-        # Get the list of parameters and their types
-        # param_names = node.params
-        
+        args_types = [get_type_from_expression(exp) for exp in node.params.params]
+
+        # Get the formal return type of the procedure
         print("param types: ", args_types)
         print("Function inside symbol table: ", symbol_table.lookup(node.id)) #procBinding
-        types_formal_params = symbol_table.lookup(node.id).params # return the function name
-        num_formal_params = len(types_formal_params)
         formal_return_type = symbol_table.lookup(node.id).return_type
         print(f"types_formal_params ----------------------------> {types_formal_params}")
         # Check if the number of arguments matches the number of parameters
-        if num_formal_params != len(args_types):
-            return f"Procedure {node.id} requires {num_formal_params} parameters but given {len(args_types)}."
+        if len(args_types) != len(formal_return_type.params):
+            return f"Procedure '{node.id}' requires {len(formal_return_type.params)} parameters but given {len(args_types)}."
 
-        # Check each argument type against its corresponding parameter type
-        for arg, param_type in zip(args_types, types_formal_params):
-            arg_type = arg.accept(self, symbol_table)
-            if arg_type != param_type:
-                return "Argument type does not match"
-
-        # Return the return type of the procedure
-        return proc_type.ret
+        # Return the formal return type of the procedure
+        return formal_return_type.return_type
 
     def visitActualParameters(self, node, symbol_table):
         print_function_name()
@@ -425,3 +423,4 @@ class Project3Visitor(AbstractVisitor):
 
         # Return the list/tuple of parameter types
         return parameter_types
+

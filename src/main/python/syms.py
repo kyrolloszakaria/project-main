@@ -11,7 +11,6 @@ def get_type_from_expression(exp):
         else:
             return "error"
 
-
 def print_function_name(notes = ""):
     frame = inspect.currentframe()
     try:
@@ -30,7 +29,7 @@ class IntBinding(Binding):
 class FloatBinding(Binding):
     def __init__(self, value):
         self.value = value
-        
+
 class StringBinding(Binding):
     pass
 
