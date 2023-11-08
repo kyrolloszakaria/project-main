@@ -103,6 +103,7 @@ class Project3Visitor(AbstractVisitor):
             return block_result  # Propagate block-level errors
 
         # Exit back to the original scope
+        print("Symbol table in variable declaration: ",symbol_table.bindings)
         symbol_table.exit()
 
         # Return the function's type ('proc')
