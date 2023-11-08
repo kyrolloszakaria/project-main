@@ -147,21 +147,22 @@ class Project3Visitor(AbstractVisitor):
         param_names = [param for param in node.params]
         param_types = [type for type in node.types]
 
+        print(f"In creating formal parameters ------------------->\nnames: {param_names}\nTypes:{param_types}")
         # Check for reserved parameter names
         for param in param_names:
             if param in ["int", "float", "void", "string", "bool"]:
                 raise Exception(f"Cannot use reserved name '{param}'")
 
         # bind the the parameter names to types.
-        for i in range(len(param_names)):
+        for i in range(len(param_names)):                 
             if param_types[i] == 'float':
-                symbol_table.bind(param_names[i], FloatBinding(value=0.0))
+                symbol_table.bind(param_types[i], FloatBinding(value=0.0))
             elif param_types[i] == 'int':
-                symbol_table.bind(param_names[i], IntBinding(value=0))
+                symbol_table.bind(param_types[i], IntBinding(value=0))
             elif param_types[i] == 'string':
-                symbol_table.bind(param_names[i], StringBinding(value="hello"))
+                symbol_table.bind(param_types[i], StringBinding(value="hello"))
             elif param_types[i] == 'bool':
-                symbol_table.bind(param_names[i], BoolBinding(value=True))
+                symbol_table.bind(param_types[i], BoolBinding(value=True))
             else:
                 return f"Undefined type for parameter '{param_names[i]}'"
         # Return the list of parameter names
@@ -376,7 +377,8 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: '{node.id}' is not a procedure."
         print(f" node: {str(node)}")
         print(f" node.params: {str(node.params)}")
-        print(f" node.params.params:{str(node.params.params)}")
+        print(f" node.params.params:{str(node.params.params)}") # list of expressions
+        param_types = []
         for exp in node.params.params:
             print(f"Expression t: {exp.t} ")  # term
             print(f"term.f : {exp.t.f}")
@@ -387,13 +389,13 @@ class Project3Visitor(AbstractVisitor):
             print(f"term.op : {exp.t.op}")
             print(f"term.t : {exp.t.t}")       
             print(f"Expression op: {exp.op} ")
-            print(f"Expression e: {exp.e} ")        
+            print(f"Expression e: {exp.e} ")
+            param_types.append(get_type_from_expression(exp))
         # Get the list of parameters and their types
-        param_names = node.params
-        param_types = []
-        print("param names: ", param_names)
-        for param in param_names:
-            param_types.append(self.getname(param, symbol_table))
+        # param_names = node.params
+        
+        print("param types: ", param_types)
+        print("Function inside symbol table: ", symbol_table.lookup(node.id))
 
         # Check if the number of arguments matches the number of parameters
         if len(param_names) != len(param_types):

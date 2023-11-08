@@ -1,6 +1,17 @@
 # debugging tool
 import inspect
 
+def get_type_from_expression(exp):
+        if exp.t.f.int:
+            return "int"
+        elif exp.t.f.float:
+            return "float"
+        elif exp.t.f.string:
+            return "string"
+        else:
+            return "error"
+
+
 def print_function_name(notes = ""):
     frame = inspect.currentframe()
     try:
