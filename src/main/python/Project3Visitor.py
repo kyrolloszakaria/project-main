@@ -377,6 +377,7 @@ class Project3Visitor(AbstractVisitor):
         # Get the list of parameters and their types
         param_names = node.params
         param_types = []
+        print("param names: ", param_names)
         for param in param_names:
             param_types.append(self.getname(param, symbol_table))
 
