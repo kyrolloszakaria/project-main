@@ -76,7 +76,33 @@ class Project3Visitor(AbstractVisitor):
             return function_types[-1]
         else:
             return 'OK'  # Return 'OK' if no functions were found
+        
+    def visitVariableDeclaration(self, node, symbol_table):
+        print_function_name()
+        # Look up ID1 in the current scope
+        print("node.id: ", node.id)
+        print("symbol_table of the block bindings:", symbol_table.bindings)
+        if node.id in symbol_table.bindings:
+            return f"{node.id} already exists"
+        # Get the type of the expression (right-hand side)
+        print("rhs of expr: ", str(node.rhs))           #PROBLEM: what is the rhs value?
+        expr_type = node.rhs.accept(self, symbol_table)
 
+        print("expr_type: ", expr_type)
+
+        # If ID2 is specified, make sure it matches the type of the expression
+        print("ID2: (node.type): ", node.type)
+        if node.type:
+            print("ID2 is specified")
+            declared_type = self.getname(node.type, symbol_table)
+            if declared_type != expr_type:
+                return f"Error: Cannot assign an expression of type '{expr_type}' to a variable of type '{declared_type}'."
+        # Bind the variable to its type
+        print("before symbol_table.bind()")
+        symbol_table.bind(node.id, FloatBinding(value=0.0) if expr_type == 'float' else IntBinding(value=0))
+        print("Symbol table in variable declaration: ",symbol_table.bindings)
+        # Return the type of the variable
+        return "OK"
     
     def visitProcedureDeclaration(self, node, symbol_table):
         print_function_name()
@@ -105,7 +131,7 @@ class Project3Visitor(AbstractVisitor):
         # Exit back to the original scope
         print("Symbol table in variable declaration: ",symbol_table.bindings)
         symbol_table.exit()
-
+        
         # Return the function's type ('proc')
         return 'OK'
 
