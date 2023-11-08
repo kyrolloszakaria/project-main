@@ -113,7 +113,7 @@ class Project3Visitor(AbstractVisitor):
         if node.id in ["int", "float", "void", "string", "bool"]:
             raise Exception(f"Cannot use reserved name '{node.id}' for a procedure.")
 
-        # Get the list of parameter types: hello
+        # Get the list of parameter types:
         param_types = node.params.accept(self, proc_table)
 
         # Get the return type from ID2 or use 'void' if none is given
@@ -131,14 +131,18 @@ class Project3Visitor(AbstractVisitor):
         # Exit back to the original scope
         print("Symbol table in variable declaration: ",symbol_table.bindings)
         symbol_table.exit()
-        
+
         # Return the function's type ('proc')
         return 'OK'
 
 
     def visitFormalParameters(self, node, symbol_table):
+    # node is , symbol_table is the proc_table 
+    # return a list of parameters and add the binding to the symbol table given
         print_function_name()
-        # Initialize a list to collect parameter types (names)
+        print(dir(node), str(node))
+        print(node.id)
+        # Initialize a list to collect parameter (names)
         param_names = [param.id for param in node.params.params]
 
         # Check for reserved parameter names
