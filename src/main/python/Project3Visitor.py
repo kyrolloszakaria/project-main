@@ -363,8 +363,11 @@ class Project3Visitor(AbstractVisitor):
         return enclosed_expression_type
     
     def visitCallExpression(self, node, symbol_table):
+        #node is CallExpression
         print_function_name()
         # Lookup the function or procedure in the symbol table
+        print("node.id: ", node.id)
+
         proc_type = self.getname(node.id, symbol_table)
 
         # Check if the function or procedure exists
@@ -372,18 +375,20 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: '{node.id}' is not a procedure."
 
         # Get the list of parameters and their types
-        params = proc_type.params
-        param_types = proc_type.types
+        param_names = node.params
+        param_types = []
+        for param in param_names:
+            param_types.append(self.getname(param, symbol_table))
 
         # Check if the number of arguments matches the number of parameters
-        if len(node.params.params) != len(params):
-            return f"Error: Procedure '{node.id}' requires {len(params)} parameters but given {len(node.params.params)}."
+        if len(node.params) != len(param_names):
+            return f"Procedure {node.id} requires {len(param_names)} parameters but given {len(node.params)}."
 
         # Check each argument type against its corresponding parameter type
-        for arg, param_type in zip(node.params.params, param_types):
+        for arg, param_type in zip(node.params, param_types):
             arg_type = arg.accept(self, symbol_table)
             if arg_type != param_type:
-                return f"Error: Argument type does not match for procedure '{node.id}'."
+                return f"Argument type does not match"
 
         # Return the return type of the procedure
         return proc_type.ret

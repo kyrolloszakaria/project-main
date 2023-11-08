@@ -177,9 +177,6 @@ class ParenthesisFactor(AbstractNode):
         self.e = None
 
 
-
-
-
 class Program(AbstractNode):
     def __init__(self):
         self.b = None
