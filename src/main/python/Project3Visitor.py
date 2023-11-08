@@ -112,6 +112,9 @@ class Project3Visitor(AbstractVisitor):
         if node.id in ["int", "float", "void", "string", "proc", "bool"]:
             return f"cannot use reserved name {node.id} "
 
+ 		# Get the return type from ID2 or use 'void' if none is given
+    	return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
+
         # Get the list of parameter types
         param_types = node.params.accept(self, proc_table)
 
@@ -119,19 +122,19 @@ class Project3Visitor(AbstractVisitor):
         return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
 
         # Create a 'proc' type and bind it
-        proc_binding = ProcBinding(param_types, return_type)
-        symbol_table.bind(node.id, proc_binding)
+    	proc_binding = ProcBinding(param_names, return_type)
+    	symbol_table.bind(node.id, proc_binding)
 
-        # Check the block
-        block_result = node.b.accept(self, proc_table)
-        if block_result != 'OK':
-            return block_result  # Propagate block-level errors
+    	# Check the block
+    	block_result = node.b.accept(self, proc_table)
+    	if block_result != 'OK':
+    		return block_result  # Propagate block-level errors
 
-        # Exit back to the original scope
-        symbol_table.exit()
+    	# Exit back to the original scope
+    	symbol_table.exit()
 
-        # Return the function's type ('proc')
-        return 'OK'
+    	# Return the function's type ('proc')
+    	return 'OK'
 
 
     def visitFormalParameters(self, node, symbol_table):
