@@ -174,6 +174,7 @@ class Project3Visitor(AbstractVisitor):
         id_type = self.getname(node.id, symbol_table)
         print("lhs type: ", id_type)
         if id_type == 'error':
+            print("here")
             return f"{node.id} undeclared."
 
         # Get the type of the expression
