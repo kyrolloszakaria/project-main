@@ -374,8 +374,9 @@ class Project3Visitor(AbstractVisitor):
         # Check if the function or procedure exists
         if proc_type == 'error':
             return f"Error: '{node.id}' is not a procedure."
-        print(dir(node.params))
-        print(str(node.params))
+        print(dir(node.params.params))
+        print(str(node.params.params))
+        print(node.params.params)
         # Get the list of parameters and their types
         param_names = node.params
         param_types = []
