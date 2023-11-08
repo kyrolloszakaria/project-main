@@ -113,13 +113,13 @@ class Project3Visitor(AbstractVisitor):
         if node.id in ["int", "float", "void", "string", "proc", "bool"]:
             return f"cannot use reserved name {node.id} "
 
-        # Get the list of parameter types
+        # Get the list of parameter types: hello
         param_types = node.params.accept(self, proc_table)
 
         # Get the return type from ID2 or use 'void' if none is given
         return_type = self.getname(node.ret, symbol_table) if node.ret else 'void'
 
-        # Create a 'proc' type and bind it
+        # Create a 'proc' type and bind it 
         proc_binding = ProcBinding(param_types, return_type)
         symbol_table.bind(node.id, proc_binding)
 
