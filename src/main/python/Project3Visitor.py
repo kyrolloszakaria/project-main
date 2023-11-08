@@ -28,7 +28,7 @@ class Project3Visitor(AbstractVisitor):
             elif isinstance(binding, ProcBinding):
                 return 'proc'
             else:
-                return f'{name} undeclared'  # Handle undeclared or unknown types
+                return f'error'  # Handle undeclared or unknown types
         except Exception as e:
             return 'error'  # Handle undeclared or unknown types
 
