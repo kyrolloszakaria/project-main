@@ -376,21 +376,21 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: '{node.id}' is not a procedure."
 
         # Get the list of parameters and their types
-        param_names = node.params.params.params
+        param_names = node.params
         param_types = []
         print("param names: ", param_names)
         for param in param_names:
             param_types.append(self.getname(param, symbol_table))
 
         # Check if the number of arguments matches the number of parameters
-        if len(node.params.params) != len(param_names):
-            return f"Procedure {node.id} requires {len(param_names)} parameters but given {len(node.params.params)}."
+        if len(param_names) != len(param_types):
+            return f"Procedure {node.id} requires {len(param_types)} parameters but given {len(param_names)}."
 
         # Check each argument type against its corresponding parameter type
-        for arg, param_type in zip(node.params, param_types):
+        for arg, param_type in zip(param_names, param_types):
             arg_type = arg.accept(self, symbol_table)
             if arg_type != param_type:
-                return f"Argument type does not match"
+                return "Argument type does not match"
 
         # Return the return type of the procedure
         return proc_type.ret
