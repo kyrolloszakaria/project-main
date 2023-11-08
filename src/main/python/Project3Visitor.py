@@ -170,6 +170,7 @@ class Project3Visitor(AbstractVisitor):
     def visitAssignmentStatement(self, node, symbol_table):
         print_function_name()
         # Look up the ID in the symbol table
+        print(node.id)
         id_type = self.getname(node.id, symbol_table)
         if id_type == 'error':
             return f"Error: Variable '{node.id}' undeclared."
