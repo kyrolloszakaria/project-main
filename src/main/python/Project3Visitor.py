@@ -385,7 +385,6 @@ class Project3Visitor(AbstractVisitor):
             print(f"factor.id: {exp.t.f.id}")
             print(f"factor.int: {exp.t.f.int}")
             print(f"factor.float: {exp.t.f.float}")
-            print(f"factor.string: {exp.t.f.string}")
             print(f"term.op : {exp.t.op}")
             print(f"term.t : {exp.t.t}")       
             print(f"Expression op: {exp.op} ")
