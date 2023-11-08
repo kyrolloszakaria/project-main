@@ -1,1 +1,1 @@
-var z = work(x);
+var z := work(x);
