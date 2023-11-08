@@ -395,7 +395,7 @@ class Project3Visitor(AbstractVisitor):
         
         print("param types: ", args_types)
         print("Function inside symbol table: ", symbol_table.lookup(node.id)) #procBinding
-        types_formal_params = symbol_table.lookup(node.id).params
+        types_formal_params = symbol_table.lookup(node.id).params.params
         num_formal_params = len(types_formal_params)
         formal_return_type = symbol_table.lookup(node.id).return_type
         print(f"types_formal_params: {types_formal_params}")
