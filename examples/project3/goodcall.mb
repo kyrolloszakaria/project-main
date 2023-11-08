@@ -2,4 +2,4 @@ proc work(x: int)
     var z := x + 3;
 corp
 
-z := work(2)
+var z := work(2)
