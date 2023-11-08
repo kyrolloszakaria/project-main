@@ -364,6 +364,7 @@ class Project3Visitor(AbstractVisitor):
     
     def visitCallExpression(self, node, symbol_table):
         #node is CallExpression
+        #node.params is actual parameters node
         print_function_name()
         # Lookup the function or procedure in the symbol table
         print("node.id: ", node.id)
@@ -375,15 +376,15 @@ class Project3Visitor(AbstractVisitor):
             return f"Error: '{node.id}' is not a procedure."
 
         # Get the list of parameters and their types
-        param_names = node.params
+        param_names = node.params.params
         param_types = []
         print("param names: ", param_names)
         for param in param_names:
             param_types.append(self.getname(param, symbol_table))
 
         # Check if the number of arguments matches the number of parameters
-        if len(node.params) != len(param_names):
-            return f"Procedure {node.id} requires {len(param_names)} parameters but given {len(node.params)}."
+        if len(node.params.params) != len(param_names):
+            return f"Procedure {node.id} requires {len(param_names)} parameters but given {len(node.params.params)}."
 
         # Check each argument type against its corresponding parameter type
         for arg, param_type in zip(node.params, param_types):
