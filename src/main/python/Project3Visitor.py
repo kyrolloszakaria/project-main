@@ -170,17 +170,18 @@ class Project3Visitor(AbstractVisitor):
     def visitAssignmentStatement(self, node, symbol_table):
         print_function_name()
         # Look up the ID in the symbol table
-        print(node.id)
+        print("lhs: ", node.id)
         id_type = self.getname(node.id, symbol_table)
+        print("lhs type: ", id_type)
         if id_type == 'error':
-            return f"Error: Variable '{node.id}' undeclared."
+            return f"{node.id} undeclared."
 
         # Get the type of the expression
         expr_type = node.e.accept(self, symbol_table)
 
         # Check if the types match
         if id_type != expr_type:
-            return f"Error: Variable '{node.id}' has type '{id_type}' but trying to assign type '{expr_type}'."
+            return f"{node.id}' has type {id_type} but trying to assign type {expr_type}"
 
         # Return the type
         return id_type
