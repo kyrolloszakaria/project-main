@@ -53,6 +53,12 @@ class SymbolTable:
             raise Exception(f"Symbol '{name}' already exists in this scope.")
         self.bindings[name] = binding
 
+    def bind_proc(self, name, params, return_type):
+        print_function_name()
+        if name in self.bindings:
+            raise Exception(f"Symbol '{name}' already exists in this scope.")
+        self.bindings[name] = ProcBinding(params, return_type)
+
     def lookup(self, name):
         print_function_name()
         if name in self.bindings:

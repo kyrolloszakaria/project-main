@@ -3,7 +3,6 @@ from syms import *
 
 # debugging tool
 import inspect
-
 def print_function_name():
     frame = inspect.currentframe()
     try:
@@ -92,17 +91,12 @@ class Project3Visitor(AbstractVisitor):
             if declared_type != expr_type:
                 return f"Error: Cannot assign an expression of type '{expr_type}' to a variable of type '{declared_type}'."
         # Bind the variable to its type
-        # Create an IntBinding or FloatBinding as appropriate
         print("before symbol_table.bind()")
-        if expr_type == 'float':
-            symbol_table.bind(node.id, FloatBinding(value=0.0))
-        else:
-            symbol_table.bind(node.id, IntBinding(value=0))
+        symbol_table.bind(node.id, FloatBinding(value=0.0) if expr_type == 'float' else IntBinding(value=0))
         print("Symbol table in variable declaration: ",symbol_table.bindings)
-
-        # Return "OK" to indicate a valid variable declaration
+        # Return the type of the variable
         return "OK"
-
+    
     def visitProcedureDeclaration(self, node, symbol_table):
         #node is ProcedureDeclaration
         print_function_name()
@@ -150,21 +144,18 @@ class Project3Visitor(AbstractVisitor):
             if param in ["int", "float", "void", "string", "bool"]:
                 raise Exception(f"Cannot use reserved name '{param}'")
 
-        # Bind the parameter names to their corresponding types 
-        # Bind x to intBinding and y to floatBinding
+        # bind the the parameter names to types.
         for i in range(len(param_names)):
-            param_name = param_names[i]
-            param_type = param_types[i]
-            if param_type == 'float':
-                symbol_table.bind(param_name, FloatBinding(value=0.0))
-            elif param_type == 'int':
-                symbol_table.bind(param_name, IntBinding(value=0))
-            elif param_type == 'string':
-                symbol_table.bind(param_name, StringBinding())
-            elif param_type == 'bool':
-                symbol_table.bind(param_name, BoolBinding())
+            if param_types[i] == 'float':
+                symbol_table.bind(param_names[i], FloatBinding(value=0.0))
+            elif param_types[i] == 'int':
+                symbol_table.bind(param_names[i], IntBinding(value=0))
+            elif param_types[i] == 'string':
+                symbol_table.bind(param_names[i], StringBinding(value="hello"))
+            elif param_types[i] == 'bool':
+                symbol_table.bind(param_names[i], BoolBinding(value=True))
             else:
-                raise Exception(f"Undefined type '{param_type}' for parameter '{param_name}'")
+                return f"Undefined type for parameter '{param_names[i]}'"
 
         # Return the list of parameter names
         return param_names
