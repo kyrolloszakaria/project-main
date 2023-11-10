@@ -11,7 +11,6 @@ def get_type_from_expression(exp):
         else:
             return "error"
 
-
 def print_function_name(notes = ""):
     frame = inspect.currentframe()
     try:
@@ -30,7 +29,7 @@ class IntBinding(Binding):
 class FloatBinding(Binding):
     def __init__(self, value):
         self.value = value
-        
+
 class StringBinding(Binding):
     pass
 
@@ -53,6 +52,12 @@ class SymbolTable:
         if name in self.bindings:
             raise Exception(f"Symbol '{name}' already exists in this scope.")
         self.bindings[name] = binding
+
+    def bind_proc(self, name, params, return_type):
+        print_function_name()
+        if name in self.bindings:
+            raise Exception(f"Symbol '{name}' already exists in this scope.")
+        self.bindings[name] = ProcBinding(params, return_type)
 
     def lookup(self, name):
         print_function_name()
