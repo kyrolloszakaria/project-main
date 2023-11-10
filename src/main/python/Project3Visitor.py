@@ -368,7 +368,7 @@ class Project3Visitor(AbstractVisitor):
         #node.params is actual parameters node
         print_function_name()
         # Lookup the function or procedure in the symbol table
-        print("node.id: ", node.id)
+        print("node.id: ", node.id) # node.id is work (function name)
 
         proc_type = self.getname(node.id, symbol_table)
 
@@ -395,7 +395,7 @@ class Project3Visitor(AbstractVisitor):
         
         print("param types: ", args_types)
         print("Function inside symbol table: ", symbol_table.lookup(node.id)) #procBinding
-        types_formal_params = symbol_table.lookup(node.id).params # return the function name
+        types_formal_params = symbol_table.lookup(node.id).params #PROBLEM: return the function name
         num_formal_params = len(types_formal_params)
         formal_return_type = symbol_table.lookup(node.id).return_type
         print(f"types_formal_params ----------------------------> {types_formal_params}")
