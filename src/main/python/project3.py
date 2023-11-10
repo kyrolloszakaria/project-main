@@ -1,10 +1,11 @@
 """
 CSCE 425/825 Semester Project
-Project 3: Type Checking
+Project 3: Type Checking 
 Author: Robert Dyer <rdyer@unl.edu>
 """
 import sys
 from antlr4 import FileStream, InputStream
+sys.path.append('/home/kzakaria2/Desktop/compiler/project3/project-main/gen/src/antlr/')
 from MambaLexer import MambaLexer
 from MambaParser import MambaParser
 from Project3Visitor import Project3Visitor

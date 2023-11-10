@@ -12,12 +12,13 @@ def get_type_from_expression(exp):
             return "error"
 
 def print_function_name(notes = ""):
-    frame = inspect.currentframe()
-    try:
-        caller_name = inspect.getframeinfo(frame.f_back).function
-        print("This program reached:", caller_name, f" {notes}")
-    finally:
-        del frame  # Make sure to clean up the frame
+    pass
+    # frame = inspect.currentframe()
+    # try:
+    #     caller_name = inspect.getframeinfo(frame.f_back).function
+    #     print("This program reached:", caller_name, f" {notes}")
+    # finally:
+    #     del frame  # Make sure to clean up the frame
 
 class Binding:
     pass
