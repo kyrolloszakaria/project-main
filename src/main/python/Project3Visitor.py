@@ -1,5 +1,5 @@
-from asts import *
-from syms import *
+from asts import AbstractVisitor, ProcedureDeclaration
+from syms import SymbolTable, ProcBinding, IntBinding, FloatBinding, StringBinding, BoolBinding, get_type_from_expression
 
 # debugging tool
 import inspect
