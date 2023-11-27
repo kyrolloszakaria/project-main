@@ -1,9 +1,7 @@
 #!/usr/bin/env sh
 
-git pull
-
 if [ -z "$2" ]; then
-	MAIN=project3
+	MAIN=project4
 else
 	MAIN=$1
 	shift

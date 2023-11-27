@@ -1,109 +1,106 @@
 class AbstractNode:
-    def accept(self, v, arg=None):
-        # print("Now we are visiting ", self.__class__.__name__ )
+    def accept(self, v, *args):
         func = getattr(v, 'visit' + self.__class__.__name__)
-        return func(self, arg)
+        return func(self, *args)
 
 
 class AbstractVisitor:
-    def visitProgram(self, node, arg=None):
+    def visitProgram(self, node, *args):
         if node.b:
-            node.b.accept(self, arg)
+            return node.b.accept(self, *args)
 
-    def visitBlock(self, node, arg=None):
-        if node.decls:
-            for d in node.decls:
-                if d:
-                    d.accept(self, arg)
-        if node.stmts:
-            for s in node.stmts:
-                if s:
-                    s.accept(self, arg)
+    def visitBlock(self, node, *args):
+        ret = None
+        if node.children:
+            for n in node.children:
+                if n:
+                    ret = n.accept(self, *args)
+        return ret
 
-    def visitVariableDeclaration(self, node, arg=None):
+    def visitVariableDeclaration(self, node, *args):
         if node.rhs:
-            node.rhs.accept(self, arg)
+            return node.rhs.accept(self, *args)
 
-    def visitProcedureDeclaration(self, node, arg=None):
+    def visitProcedureDeclaration(self, node, *args):
         if node.params:
-            node.params.accept(self, arg)
+            node.params.accept(self, *args)
         if node.b:
-            node.b.accept(self, arg)
+            node.b.accept(self, *args)
 
-    def visitFormalParameters(self, node, arg=None):
+    def visitFormalParameters(self, node, *args):
         pass
 
-    def visitStatement(self, node, arg=None):
+    def visitStatement(self, node, *args):
         if node.assign:
-            node.assign.accept(self, arg)
+            return node.assign.accept(self, *args)
         if node.call:
-            node.call.accept(self, arg)
+            return node.call.accept(self, *args)
         if node.ret:
-            node.ret.accept(self, arg)
+            return node.ret.accept(self, *args)
         if node.ifs:
-            node.ifs.accept(self, arg)
+            return node.ifs.accept(self, *args)
         if node.whiles:
-            node.whiles.accept(self, arg)
+            return node.whiles.accept(self, *args)
 
-    def visitAssignmentStatement(self, node, arg=None):
+    def visitAssignmentStatement(self, node, *args):
         if node.e:
-            node.e.accept(self, arg)
+            return node.e.accept(self, *args)
 
-    def visitCallExpression(self, node, arg=None):
+    def visitCallExpression(self, node, *args):
         if node.params:
-            node.params.accept(self, arg)
+            return node.params.accept(self, *args)
 
-    def visitReturnStatement(self, node, arg=None):
+    def visitReturnStatement(self, node, *args):
         if node.e:
-            node.e.accept(self, arg)
+            return node.e.accept(self, *args)
 
-    def visitIfStatement(self, node, arg=None):
+    def visitIfStatement(self, node, *args):
         if node.c:
-            node.c.accept(self, arg)
+            node.c.accept(self, *args)
         if node.t:
-            node.t.accept(self, arg)
+            node.t.accept(self, *args)
         if node.f:
-            node.f.accept(self, arg)
+            node.f.accept(self, *args)
 
-    def visitWhileStatement(self, node, arg=None):
+    def visitWhileStatement(self, node, *args):
         if node.c:
-            node.c.accept(self, arg)
+            node.c.accept(self, *args)
         if node.s:
-            node.s.accept(self, arg)
+            node.s.accept(self, *args)
 
-    def visitActualParameters(self, node, arg=None):
+    def visitActualParameters(self, node, *args):
         if node.params:
             for e in node.params:
                 if e:
-                    e.accept(self, arg)
+                    e.accept(self, *args)
 
-    def visitCondition(self, node, arg=None):
+    def visitCondition(self, node, *args):
         if node.lhs:
-            node.lhs.accept(self, arg)
+            node.lhs.accept(self, *args)
         if node.rhs:
-            node.rhs.accept(self, arg)
+            node.rhs.accept(self, *args)
 
-    def visitExpression(self, node, arg=None):
+    def visitExpression(self, node, *args):
         if node.t:
-            node.t.accept(self, arg)
+            node.t.accept(self, *args)
         if node.e:
-            node.e.accept(self, arg)
+            node.e.accept(self, *args)
 
-    def visitTerm(self, node, arg=None):
+    def visitTerm(self, node, *args):
         if node.f:
-            node.f.accept(self, arg)
+            node.f.accept(self, *args)
         if node.t:
-            node.t.accept(self, arg)
+            node.t.accept(self, *args)
 
-    def visitFactor(self, node, arg=None):
+    def visitFactor(self, node, *args):
         if node.f:
-            node.f.accept(self, arg)
+            return node.f.accept(self, *args)
         if node.call:
-            node.call.accept(self, arg)
+            return node.call.accept(self, *args)
 
-    def visitParenthesisFactor(self, node, arg=None):
+    def visitParenthesisFactor(self, node, *args):
         if node.e:
-            node.e.accept(self, arg)
+            return node.e.accept(self, *args)
 
 
 class ActualParameters(AbstractNode):
@@ -119,14 +116,13 @@ class AssignmentStatement(AbstractNode):
 
 class Block(AbstractNode):
     def __init__(self):
-        self.decls = []
-        self.stmts = []
+        self.children = []
 
 
 class CallExpression(AbstractNode):
     def __init__(self):
         self.id = None
-        self.params = []
+        self.params = None
 
 
 class Condition(AbstractNode):
@@ -158,12 +154,6 @@ class FormalParameters(AbstractNode):
         self.params = []
         self.types = []
 
-class ProcedureDeclaration(AbstractNode):
-    def __init__(self):
-        self.id = None
-        self.params = None
-        self.ret = None
-        self.b = None
 
 class IfStatement(AbstractNode):
     def __init__(self):
@@ -175,6 +165,14 @@ class IfStatement(AbstractNode):
 class ParenthesisFactor(AbstractNode):
     def __init__(self):
         self.e = None
+
+
+class ProcedureDeclaration(AbstractNode):
+    def __init__(self):
+        self.id = None
+        self.params = None
+        self.ret = None
+        self.b = None
 
 
 class Program(AbstractNode):

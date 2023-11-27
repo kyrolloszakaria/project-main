@@ -3,7 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ -z "$1" ]; then
-	echo "Must specify which project (e.g., project1 or project2 or project3)"
+	echo "Must specify which project (e.g., project1 or project2 or project3 or project4)"
 	exit -1
 fi
 

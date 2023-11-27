@@ -1,79 +1,91 @@
-# debugging tool
-import inspect
+# NOTE: This is the code from our in-class activity.
+# Feel free to modify it as you see fit.
 
-def get_type_from_expression(exp):
-        if exp.t.f.int:
-            return "int"
-        elif exp.t.f.float:
-            return "float"
-        elif exp.t.f.string:
-            return "string"
-        else:
-            return "error"
-
-def print_function_name(notes = ""):
-    pass
-    # frame = inspect.currentframe()
-    # try:
-    #     caller_name = inspect.getframeinfo(frame.f_back).function
-    #     print("This program reached:", caller_name, f" {notes}")
-    # finally:
-    #     del frame  # Make sure to clean up the frame
 
 class Binding:
     pass
 
+
 class IntBinding(Binding):
-    def __init__(self, value):
-        self.value = value
+    def __repr__(self):
+        return 'int'
+
+    def __eq__(self, o):
+        return isinstance(o, IntBinding)
+
 
 class FloatBinding(Binding):
-    def __init__(self, value):
-        self.value = value
+    def __repr__(self):
+        return 'float'
 
-class StringBinding(Binding):
-    pass
+    def __eq__(self, o):
+        return isinstance(o, FloatBinding)
+
+
+class StrBinding(Binding):
+    def __repr__(self):
+        return 'string'
+
+    def __eq__(self, o):
+        return isinstance(o, StrBinding)
+
 
 class BoolBinding(Binding):
-    pass
+    def __repr__(self):
+        return 'bool'
+
+    def __eq__(self, o):
+        return isinstance(o, BoolBinding)
+
+
+class VoidBinding(Binding):
+    def __repr__(self):
+        return 'void'
+
+    def __eq__(self, o):
+        return isinstance(o, VoidBinding)
+
 
 class ProcBinding(Binding):
-    def __init__(self, params, return_type):
-        self.params = params  # List of parameter types
-        self.return_type = return_type  # Return type of the procedure
+    def __init__(self, params, ret):
+        self.params = params
+        self.ret = ret
+
+    def __repr__(self):
+        return 'proc(' + repr(self.params)[1:-1] + ')' + ' -> ' + repr(self.ret)
+
+    def __eq__(self, o):
+        if not isinstance(o, ProcBinding):
+            return False
+        return self.params == o.params and self.ret == o.ret
+
 
 class SymbolTable:
     def __init__(self, parent=None):
-        print_function_name("to create a new symbol table")
         self.parent = parent
         self.bindings = {}
 
+    def __repr__(self):
+        if self.parent:
+            return repr(self.parent) + ' :: ' + repr(self.bindings)
+        return repr(self.bindings)
+
     def bind(self, name, binding):
-        print_function_name()
         if name in self.bindings:
-            raise Exception(f"Symbol '{name}' already exists in this scope.")
+            raise Exception("name is already bound in this scope")
         self.bindings[name] = binding
 
-    def bind_proc(self, name, params, return_type):
-        print_function_name()
-        if name in self.bindings:
-            raise Exception(f"Symbol '{name}' already exists in this scope.")
-        self.bindings[name] = ProcBinding(params, return_type)
-
-    def lookup(self, name):
-        print_function_name()
+    def lookup(self, name, currentOnly=False):
         if name in self.bindings:
             return self.bindings[name]
-        if not self.parent:
-            raise Exception(f"Symbol '{name}' is undeclared.")
+        if currentOnly or not self.parent:
+            return None
         return self.parent.lookup(name)
 
     def enter(self):
-        print_function_name("to create a new scope")
         return SymbolTable(parent=self)
 
     def exit(self):
-        print_function_name()
         if not self.parent:
-            raise Exception("Cannot exit from the global scope.")
+            return None
         return self.parent

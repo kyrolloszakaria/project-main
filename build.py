@@ -2,7 +2,7 @@
 
 """
 CSCE 425/825 Semester Project
-Project 3: Type Checking
+Project 4: Code Generation
 
 Author: Robert Dyer <rdyer@unl.edu>
 """
@@ -19,9 +19,9 @@ use_plugin('python.flake8')
 
 
 name = '425project'
-version = '3'
+version = '4'
 authors = (Author('Robert Dyer', 'rdyer@unl.edu'))
-default_task = 'project3'
+default_task = 'project4'
 
 
 @init
@@ -116,6 +116,25 @@ def project3(project, logger, reactor):
 
     debug(project)
     from project3 import main
+    main(logger, inputfile=inputfile, inputstr=inputstr)
+
+    print('------------------------------------------------------------')
+    print('COMPILER OUTPUT END')
+    print('------------------------------------------------------------')
+
+@task
+@depends(antlr)
+@description('runs project 4 on an input (-P inputfile=<file>) or a string (-P inputstr="<code>")')
+def project4(project, logger, reactor):
+    (inputfile, inputstr) = verifytask(project, logger)
+    setuptask(reactor)
+
+    print('------------------------------------------------------------')
+    print('COMPILER OUTPUT START')
+    print('------------------------------------------------------------')
+
+    debug(project)
+    from project4 import main
     main(logger, inputfile=inputfile, inputstr=inputstr)
 
     print('------------------------------------------------------------')

@@ -1,0 +1,81 @@
+
+- Terminals: Let's start by mapping each terminal to a lowercase alphabet letter:
+- VAR → a
+- ID → b
+- COLON → c
+- ASSIGN → d
+- SEMICOLON → e
+- PROC → f
+- LPAREN → g
+- RPAREN → h
+- COMMA → i
+- CORP → j
+- RET → k
+- IF → l
+- THEN → m
+- ELSE → n
+- FI → o
+- WHILE → p
+- DO → q
+- END → r
+- EQ → s
+- NE → t
+- LT → u
+- LTE → v
+- GT → w
+- GTE → x
+- PLUS → y
+- MINUS → z
+- MULT → aa
+- DIV → ab
+- NUM_INT → ac
+- NUM_FLOAT → ad
+
+- Non-terminals: Let's map each non-terminal to an uppercase alphabet letter:
+- Program → A
+- Block → B
+- VariableDeclaration → C
+- ProcedureDeclaration → D
+- FormalParameters → E
+- Statement → F
+- AssignmentStatement → G
+- ReturnStatement → H
+- IfStatement → I
+- WhileStatement → J
+- Condition → K
+- Expression → L
+- Term → M
+- Factor → N
+- ParenthesisFactor → O
+- CallExpression → P
+- ActualParameters → Q
+
+Now, rewriting the grammar using the new symbols:
+
+```
+A ::= B EOF
+B ::= (C | D | F)+
+C ::= a b c (b)? d L (e)?
+D ::= f b g (E)? h (c b)? B j
+E ::= b c b (i b c b)*
+F ::= G e?
+| P e?
+| H e?
+| I e?
+| J e?
+G ::= b d L
+H ::= k L
+I ::= l K m F n F o
+J ::= p K q F r
+K ::= L (s | t | u | v | w | x) L
+L ::= M ((y | z) L)?
+M ::= N ((aa | ab) M)?
+N ::= b
+| ac
+| ad
+| O
+| P
+O ::= g L h
+P ::= b g (Q)? h
+Q ::= L (i L)*
+```

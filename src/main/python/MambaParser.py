@@ -58,11 +58,11 @@ class MambaParser:
         try:
             while not self.err and self.curToken.type in [MambaLexer.VAR, MambaLexer.PROC, MambaLexer.ID, MambaLexer.RET, MambaLexer.IF, MambaLexer.WHILE]:
                 if self.curToken.type == MambaLexer.VAR:
-                    node.decls.append(self.parseVariableDeclaration())
+                    node.children.append(self.parseVariableDeclaration())
                 elif self.curToken.type == MambaLexer.PROC:
-                    node.decls.append(self.parseProcedureDeclaration())
+                    node.children.append(self.parseProcedureDeclaration())
                 elif self.curToken.type in [MambaLexer.ID, MambaLexer.RET, MambaLexer.IF, MambaLexer.WHILE]:
-                    node.stmts.append(self.parseStatement())
+                    node.children.append(self.parseStatement())
                 else:
                     self.error()
         finally:
@@ -333,6 +333,7 @@ class MambaParser:
         if self.err:
             return
         node = CallExpression()
+        node.params = ActualParameters()
         try:
             node.id = nodeid
             self.expect(MambaLexer.LPAREN)

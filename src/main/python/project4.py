@@ -1,6 +1,7 @@
 """
 CSCE 425/825 Semester Project
-Project 3: Type Checking
+Project 4: Code Generation
+
 Author: Robert Dyer <rdyer@unl.edu>
 """
 import sys
@@ -8,7 +9,8 @@ from antlr4 import FileStream, InputStream
 from MambaLexer import MambaLexer
 from MambaParser import MambaParser
 from Project3Visitor import Project3Visitor
-from syms import SymbolTable
+from Project4Visitor import Project4Visitor
+from syms import FloatBinding, IntBinding, ProcBinding, StrBinding, SymbolTable, VoidBinding
 
 
 def main(logger, inputfile=None, inputstr=None):
@@ -29,7 +31,20 @@ def main(logger, inputfile=None, inputstr=None):
         sys.exit(-3)
 
     try:
-        p.accept(Project3Visitor(), SymbolTable(), SymbolTable())
-        print('OK')
+        # add the built-in/global functions
+        ft = SymbolTable()
+        ft.bind('out', ProcBinding([StrBinding()], VoidBinding()))
+        ft.bind('int', ProcBinding([FloatBinding()], IntBinding()))
+        ft.bind('float', ProcBinding([IntBinding()], FloatBinding()))
+        ft.bind('string', ProcBinding([FloatBinding()], StrBinding()))
+
+        p.accept(Project3Visitor(), ft, SymbolTable())
     except Exception as e:
         print(e)
+        sys.exit(-4)
+
+    try:
+        print(p.accept(Project4Visitor()))
+    except Exception as e:
+        print(e)
+        sys.exit(-5)
