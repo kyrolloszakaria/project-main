@@ -1,9 +1,0 @@
-Collecting antlr4-python3-runtime==4.13.0
-  Using cached antlr4_python3_runtime-4.13.0-py3-none-any.whl (144 kB)
-Collecting debugpy
-  Using cached debugpy-1.8.0-cp311-cp311-win_amd64.whl (4.9 MB)
-Installing collected packages: antlr4-python3-runtime, debugpy
-Successfully installed antlr4-python3-runtime-4.13.0 debugpy-1.8.0
-
-[notice] A new release of pip is available: 23.1.2 -> 23.3
-[notice] To update, run: python.exe -m pip install --upgrade pip

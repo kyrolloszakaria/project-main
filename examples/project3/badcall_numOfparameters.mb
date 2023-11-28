@@ -1,5 +1,0 @@
-proc work(x: int)
-    var z := x + 3;
-corp
-
-var z := work(2, 5)
